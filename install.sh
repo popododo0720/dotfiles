@@ -100,4 +100,32 @@ if tmux info &>/dev/null; then
 
 fi
 
+# ===== Add custom bash config =====
+
+if [ -f "$DOTFILES_DIR/bash/.bashrc_custom" ]; then
+
+  # 기존 bashrc에 source 추가
+
+  if ! grep -q ".bashrc_custom" ~/.bashrc; then
+
+    echo "" >>~/.bashrc
+
+    echo "# Custom aliases and settings from dotfiles" >>~/.bashrc
+
+    echo "source $DOTFILES_DIR/bash/.bashrc_custom" >>~/.bashrc
+
+    echo "✅ Added custom bash config to ~/.bashrc"
+
+  else
+
+    echo "✅ Custom bash config already linked"
+
+  fi
+
+fi
+
 echo "🎉 Dotfiles setup complete!"
+echo ""
+echo "💡 Run one of the following to apply bash config:"
+echo "   source ~/.bashrc"
+echo "   exec bash"

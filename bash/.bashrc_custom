@@ -1,0 +1,16 @@
+# 디렉토리 이동
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# tmux
+alias ta='tmux attach'
+alias tn='tmux new -s'
+alias tl='tmux ls'
+alias tk='tmux kill-session -t'
+
+# vim
+alias v='nvim'
+
+# psql
+alias pg='sudo -u postgres psql'
