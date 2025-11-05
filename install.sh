@@ -2,13 +2,17 @@
 
 set -e
 
-# 현재 스크립트 위치 기준
+
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+
+
 echo "🧩 Setting up dotfiles from $DOTFILES_DIR ..."
 
-# ===== System Update (once) =====
+
+
+# ===== System Update =====
 
 echo "📦 Running apt update & upgrade..."
 
@@ -16,7 +20,21 @@ sudo apt update -y
 
 sudo apt upgrade -y
 
-# ===== Install function =====
+
+
+# ===== Install Stow =====
+
+if ! command -v stow &>/dev/null; then
+
+  echo "📦 Installing stow..."
+
+  sudo apt install -y stow
+
+fi
+
+
+
+# ===== Install packages =====
 
 install_pkg() {
 
@@ -36,7 +54,7 @@ install_pkg() {
 
 }
 
-# ===== Install core packages =====
+
 
 install_pkg tmux
 
@@ -46,7 +64,9 @@ install_pkg curl
 
 install_pkg unzip
 
-# ===== Install Neovim (latest AppImage) =====
+
+
+# ===== Install Neovim =====
 
 if ! command -v nvim &>/dev/null; then
 
@@ -66,7 +86,7 @@ else
 
 fi
 
-# ===== Recommended CLI tools =====
+
 
 install_pkg ripgrep
 
@@ -74,58 +94,33 @@ install_pkg fd-find
 
 install_pkg fzf
 
-# ===== Link Neovim config =====
 
-mkdir -p ~/.config
 
-rm -rf ~/.config/nvim
+# ===== Stow dotfiles =====
 
-ln -sf "$DOTFILES_DIR/nvim" ~/.config/nvim
+cd "$DOTFILES_DIR"
 
-echo "✅ Linked Neovim config → ~/.config/nvim"
 
-# ===== Link tmux config =====
 
-ln -sf "$DOTFILES_DIR/tmux/tmux.conf" ~/.tmux.conf
+echo "🔗 Linking dotfiles with stow..."
 
-echo "✅ Linked tmux config → ~/.tmux.conf"
+stow -v nvim
 
-# tmux 실행 중이면 설정 reload
+stow -v tmux
 
-if tmux info &>/dev/null; then
+stow -v bash
 
-  tmux source-file ~/.tmux.conf
 
-  echo "🔄 Reloaded tmux config"
+# ===== Add bashrc source =====
 
-fi
+if ! grep -q ".bashrc_custom" ~/.bashrc; then
 
-# ===== Add custom bash config =====
-
-if [ -f "$DOTFILES_DIR/bash/.bashrc_custom" ]; then
-
-  # 기존 bashrc에 source 추가
-
-  if ! grep -q ".bashrc_custom" ~/.bashrc; then
-
-    echo "" >>~/.bashrc
-
-    echo "# Custom aliases and settings from dotfiles" >>~/.bashrc
-
-    echo "source $DOTFILES_DIR/bash/.bashrc_custom" >>~/.bashrc
-
-    echo "✅ Added custom bash config to ~/.bashrc"
-
-  else
-
-    echo "✅ Custom bash config already linked"
-
-  fi
+  echo "" >> ~/.bashrc
+  
+  echo "# Custom aliases from dotfiles" >> ~/.bashrc
+  
+  echo "[ -f ~/.bashrc_custom ] && source ~/.bashrc_custom" >> ~/.bashrc
+  
+  echo "✅ Added bashrc_custom to ~/.bashrc"
 
 fi
-
-echo "🎉 Dotfiles setup complete!"
-echo ""
-echo "💡 Run one of the following to apply bash config:"
-echo "   source ~/.bashrc"
-echo "   exec bash"

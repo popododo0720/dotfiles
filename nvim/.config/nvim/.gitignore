@@ -1,0 +1,19 @@
+tt.*
+.tests
+doc/tags
+debug
+.repro
+foo.*
+*.log
+data
+
+# 임시 파일
+*.swp
+*.swo
+*~
+
+# Neovim
+nvim/.DS_Store
+nvim/plugin/
+nvim/.luarc.json
+nvim/.stylua.toml

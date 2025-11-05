@@ -2,36 +2,44 @@
 
 set -e
 
-# 현재 스크립트 위치 기준
+
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+
+
 echo "🔄 Updating dotfiles from $DOTFILES_DIR ..."
 
-# ===== Link Neovim config =====
 
-mkdir -p ~/.config
 
-rm -rf ~/.config/nvim
+cd "$DOTFILES_DIR"
 
-ln -sf "$DOTFILES_DIR/nvim" ~/.config/nvim
 
-echo "✅ Linked Neovim config → ~/.config/nvim"
 
-# ===== Link tmux config =====
+# Restow (업데이트)
 
-ln -sf "$DOTFILES_DIR/tmux/tmux.conf" ~/.tmux.conf
+stow -R nvim
 
-echo "✅ Linked tmux config → ~/.tmux.conf"
+stow -R tmux
 
-# tmux 실행 중이면 설정 reload
+stow -R bash
+
+
+
+echo "✅ Dotfiles updated"
+
+
+
+# tmux reload
 
 if tmux info &>/dev/null; then
 
-  tmux source-file ~/.tmux.conf
+  tmux source-file ~/.config/tmux/tmux.conf
 
   echo "🔄 Reloaded tmux config"
 
 fi
 
-echo "🎉 Dotfiles links updated!"
+
+
+echo "🎉 Update complete!"
