@@ -20,8 +20,7 @@ map("n", "<C-Down>", ":resize -2<cr>", { desc = "Decrease height" })
 map("n", "<C-Left>", ":vertical resize -2<cr>", { desc = "Decrease width" })
 map("n", "<C-Right>", ":vertical resize +2<cr>", { desc = "Increase width" })
 
--- 터미널 모드 나가기
-map("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+-- 터미널 ESC는 toggleterm에서 처리 (터미널 닫기)
 
 -- Ctrl+C/V 클립보드 (OSC52로 원격에서도 작동)
 map("v", "<C-c>", function()
