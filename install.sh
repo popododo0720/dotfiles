@@ -48,6 +48,37 @@ install_pkg ripgrep
 install_pkg fd-find
 install_pkg fzf
 
+# ===== Install Nerd Font (for icons) =====
+echo "🔤 Installing Nerd Font for icons..."
+FONT_DIR="$HOME/.local/share/fonts"
+mkdir -p "$FONT_DIR"
+
+if [ ! -f "$FONT_DIR/JetBrainsMonoNerdFont-Regular.ttf" ]; then
+  echo "📦 Downloading JetBrains Mono Nerd Font..."
+  cd /tmp
+  curl -fLo "JetBrainsMono.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip
+  unzip -o JetBrainsMono.zip -d "$FONT_DIR"
+  rm JetBrainsMono.zip
+  fc-cache -fv
+  echo "✅ Nerd Font installed. Please set your terminal font to 'JetBrainsMono Nerd Font'"
+else
+  echo "✅ Nerd Font already installed."
+fi
+
+cd "$DOTFILES_DIR"
+
+# ===== Install LazyGit =====
+if ! command -v lazygit &>/dev/null; then
+  echo "📦 Installing LazyGit..."
+  LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+  curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+  tar xf lazygit.tar.gz lazygit
+  sudo install lazygit /usr/local/bin
+  rm lazygit lazygit.tar.gz
+else
+  echo "✅ lazygit already installed."
+fi
+
 # ===== nvim-treesitter dependencies =====
 echo "🌲 Installing nvim-treesitter dependencies..."
 

@@ -31,6 +31,20 @@ end, { desc = "Toggle terminal" })
 -- 터미널 모드 나가기
 map("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
+-- Ctrl+C/V 클립보드 (OSC52로 원격에서도 작동)
+map("v", "<C-c>", function()
+  require("osc52").copy_visual()
+end, { desc = "Copy to clipboard (OSC52)" })
+map("n", "<C-v>", '"+p', { desc = "Paste from clipboard" })
+map("i", "<C-v>", '<C-r>+', { desc = "Paste from clipboard" })
+map("v", "<C-v>", '"+p', { desc = "Paste from clipboard" })
+
+-- 일반 y도 OSC52로 복사 (선택사항)
+map("n", "y", '"+y', { desc = "Yank to clipboard" })
+map("v", "y", function()
+  require("osc52").copy_visual()
+end, { desc = "Yank to clipboard (OSC52)" })
+
 -- Neoscroll 부드러운 스크롤 (플러그인 로드 후 적용)
 vim.defer_fn(function()
   if pcall(require, "neoscroll") then

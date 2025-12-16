@@ -1,18 +1,14 @@
 -- Options are automatically loaded before lazy.nvim startup
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
-vim.opt.clipboard = "unnamedplus" -- y, p 명령이 시스템 클립보드(+) 사용
 
-vim.g.clipboard = {
-  name = "OSC 52", -- 클립보드 프로토콜 이름
+-- 성능 최적화 (큰 코드베이스용)
+vim.opt.updatetime = 100 -- CursorHold 이벤트 딜레이 감소
+vim.opt.timeoutlen = 300 -- 키 입력 대기 시간
+vim.opt.redrawtime = 1500 -- syntax 강조 최대 시간
+vim.opt.synmaxcol = 300 -- syntax 강조 최대 컬럼 (매우 긴 줄 최적화)
 
-  copy = {
-    ["+"] = require("vim.ui.clipboard.osc52").copy("+"), -- + 레지스터 복사 시 OSC 52로 로컬에 전송
-    ["*"] = require("vim.ui.clipboard.osc52").copy("*"), -- * 레지스터도 동일
-  },
-
-  paste = {
-    ["+"] = require("vim.ui.clipboard.osc52").paste("+"), -- 붙여넣기 (SSH에선 보통 안 됨)
-    ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
-  },
-}
+-- swap/backup 최적화
+vim.opt.swapfile = false -- swap 파일 비활성화 (성능 향상)
+vim.opt.backup = false
+vim.opt.writebackup = false
